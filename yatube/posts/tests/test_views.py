@@ -132,6 +132,7 @@ class PostPagesTests(TestCase):
         form_fields = {
             'text': forms.fields.CharField,
             'group': forms.fields.ChoiceField,
+            'image': forms.fields.ImageField,
         }
         for reverse_name in reverse_names:
             with self.subTest(reverse_name=reverse_name):
@@ -250,6 +251,15 @@ class PostPagesTests(TestCase):
         self.assertEqual(new_post, response_follower.context['page_obj'][0])
         self.assertFalse(len(response_unfollower.context['page_obj']))
 
+    def test_follower_can_subscribe(self):
+        """ Проверка попытки подписаться на себя"""
+        Follow.objects.all().delete()
+        self.authorized_author.get(
+            reverse('posts:profile_follow', args=(self.author,))
+        )
+        count_followers = Follow.objects.count()
+        self.assertEqual(count_followers, 0)
+
 
 class PaginatorViewsTest(TestCase):
     @classmethod
@@ -272,12 +282,22 @@ class PaginatorViewsTest(TestCase):
         ]
         cls.posts = Post.objects.bulk_create(post)
 
+    def setUp(self):
+        cache.clear()
+        self.user = User.objects.create_user(username='TestUser')
+        self.not_author = Client()
+        self.not_author.force_login(self.user)
+
     def test_first_page_contains_ten_records(self):
         """ Проверка: количество постов на каждой странице"""
         reverse_names = (
             ('posts:index', None),
+            ('posts:follow_index', None),
             ('posts:group_list', (self.group.slug,)),
             ('posts:profile', (self.author,))
+        )
+        self.not_author.get(
+            reverse('posts:profile_follow', args=(self.author,))
         )
         count_posts_on_pages = (
             ('?page=1', settings.COUNT_POSTS),
@@ -287,7 +307,7 @@ class PaginatorViewsTest(TestCase):
             with self.subTest(name=name):
                 for page, count in count_posts_on_pages:
                     with self.subTest(count=count):
-                        response = self.client.get(
+                        response = self.not_author.get(
                             reverse(name, args=args) + page
                         )
                         self.assertEqual(

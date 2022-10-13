@@ -59,6 +59,21 @@ class PostURLTests(TestCase):
                 (self.post.pk,),
                 f'/posts/{self.post.pk}/comment/'
             ),
+            (
+                'posts:follow_index',
+                None,
+                '/follow/'
+            ),
+            (
+                'posts:profile_follow',
+                (self.post.author.username,),
+                f'/profile/{self.post.author.username}/follow/'
+            ),
+            (
+                'posts:profile_unfollow',
+                (self.post.author.username,),
+                f'/profile/{self.post.author.username}/unfollow/'
+            ),
         )
 
     def test_reverse_name_url(self):
@@ -78,6 +93,7 @@ class PostURLTests(TestCase):
         cache.clear()
         url_names = (
             ('posts:index', None, 'posts/index.html'),
+            ('posts:follow_index', None, 'posts/follow.html'),
             (
                 'posts:group_list',
                 (self.group.slug,),
@@ -111,7 +127,17 @@ class PostURLTests(TestCase):
             with self.subTest(name=name):
                 response = self.author.get(reverse(name, args=args))
                 if name == 'posts:add_comment':
-                    self.assertEqual(response.status_code, HTTPStatus.FOUND)
+                    self.assertRedirects(response, reverse(
+                        'posts:post_detail', args=(self.post.pk,)
+                    ))
+                elif name == 'posts:profile_follow':
+                    self.assertRedirects(response, reverse(
+                        'posts:profile', args=(self.post.author.username,)
+                    ))
+                elif name == 'posts:profile_unfollow':
+                    self.assertEqual(
+                        response.status_code, HTTPStatus.NOT_FOUND
+                    )
                 else:
                     self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -120,24 +146,30 @@ class PostURLTests(TestCase):
         for name, args, x in self.reverse_names:
             with self.subTest(name=name):
                 response = self.not_author.get(reverse(name, args=args))
-                if name == 'posts:post_edit':
+                if name in ('posts:post_edit', 'posts:add_comment'):
                     self.assertRedirects(response, reverse(
                         'posts:post_detail', args=(self.post.pk,)
                     ))
+                elif name in (
+                    'posts:profile_follow',
+                    'posts:profile_unfollow'
+                ):
+                    self.assertRedirects(response, reverse(
+                        'posts:profile', args=(self.post.author.username,)
+                    ))
                 else:
-                    if name == 'posts:add_comment':
-                        self.assertEqual(
-                            response.status_code, HTTPStatus.FOUND
-                        )
-                    else:
-                        self.assertEqual(response.status_code, HTTPStatus.OK)
+                    self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_urls_guest(self):
         """Проверяем доступность страниц для гостя"""
         for_redirect = (
             'posts:post_edit',
             'posts:post_create',
-            'posts:add_comment',)
+            'posts:add_comment',
+            'posts:profile_follow',
+            'posts:profile_unfollow',
+            'posts:follow_index',
+        )
         for name, args, url in self.reverse_names:
             with self.subTest(name=name):
                 response = self.client.get(reverse(name, args=args))

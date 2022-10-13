@@ -58,7 +58,7 @@ class Comment(CreatedModel):
         null=True,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name="Комментарий",
+        verbose_name="Комментируемы пост",
         help_text='Введите комментарий'
     )
     author = models.ForeignKey(
@@ -72,6 +72,14 @@ class Comment(CreatedModel):
         max_length=400,
         help_text='Введите текст комментария'
     )
+
+    class Meta:
+        ordering = ('author',)
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self) -> str:
+        return self.post[:15]
 
 
 class Follow(models.Model):
@@ -87,3 +95,10 @@ class Follow(models.Model):
         related_name='following',
         verbose_name="Автор постов"
     )
+
+    class Meta:
+        verbose_name = 'Подписчик'
+        verbose_name_plural = 'Подписчики'
+
+    def __str__(self) -> str:
+        return str(f'{self.user} подписан на {self.author}')

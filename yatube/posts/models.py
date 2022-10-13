@@ -1,9 +1,9 @@
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 from django.db import models
 
-from core.models import CreatedModel
+from core.models import CreatedModel, User
 
-User = get_user_model()
+# User = get_user_model()
 
 
 class Group(models.Model):
@@ -20,13 +20,6 @@ class Group(models.Model):
 
 
 class Post(CreatedModel):
-    text = models.TextField("Текст поста", help_text='Введите текст поста')
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='posts',
-        verbose_name="Автор"
-    )
     group = models.ForeignKey(
         Group,
         blank=True,
@@ -42,13 +35,10 @@ class Post(CreatedModel):
         blank=True
     )
 
-    class Meta:
-        ordering = ('-pub_date',)
+    class Meta(CreatedModel.Meta):
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
-
-    def __str__(self) -> str:
-        return self.text[:15]
+        default_related_name = 'posts'
 
 
 class Comment(CreatedModel):
@@ -61,25 +51,11 @@ class Comment(CreatedModel):
         verbose_name="Комментируемы пост",
         help_text='Введите комментарий'
     )
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name="Автор коммента"
-    )
-    text = models.TextField(
-        "Текст комментария",
-        max_length=400,
-        help_text='Введите текст комментария'
-    )
 
-    class Meta:
-        ordering = ('author',)
+    class Meta(CreatedModel.Meta):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-
-    def __str__(self) -> str:
-        return self.post[:15]
+        default_related_name = 'comments'
 
 
 class Follow(models.Model):

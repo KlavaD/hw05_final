@@ -296,8 +296,9 @@ class PaginatorViewsTest(TestCase):
             ('posts:group_list', (self.group.slug,)),
             ('posts:profile', (self.author,))
         )
-        self.not_author.get(
-            reverse('posts:profile_follow', args=(self.author,))
+        Follow.objects.create(
+            user=self.user,
+            author=self.author
         )
         count_posts_on_pages = (
             ('?page=1', settings.COUNT_POSTS),

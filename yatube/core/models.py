@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 
 User = get_user_model()
 
@@ -16,14 +16,15 @@ class CreatedModel(models.Model):
         verbose_name="Автор"
     )
     text = models.TextField(
+        'Текст',
         max_length=400,
         help_text='Введите текст'
     )
-
-    def __str__(self) -> str:
-        return self.text[:15]
 
     class Meta:
         # Это абстрактная модель:
         abstract = True
         ordering = ('-pub_date',)
+
+    def __str__(self) -> str:
+        return self.text[:15]

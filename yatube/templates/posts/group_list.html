@@ -3,18 +3,19 @@
   {{ group.title }}
 {% endblock %}
 {% block content %}
-  <h1>{{ group.title }}</h1>
-  <hr>
-  <p>
-    {{ group.description|linebreaks }}
-  </p>  
-  <hr>
-  {% for post in page_obj %}
-    {% include 'posts/includes/post_card.html' with group_flag=True %}
-      <hr>
-    {% if not forloop.last %}
-      <hr>
-    {% endif %}
-  {% endfor %}
-  {% include 'posts/includes/paginator.html' %}
+<div class="row">
+  <div class="col-15">
+    <div class"container py-5 shadow-sm">
+      <h1>{{ group.title }}</h1>
+    <div class="row col-md-14">
+      <p>
+        {{ group.description|linebreaks }}
+      </p>
+      {% for post in page_obj %}
+        {% include 'posts/includes/post_card.html' with group_flag=True %}
+      {% endfor %}
+      {% include 'posts/includes/paginator.html' %}
+    </div>
+  </div>
+</div>
 {% endblock %}

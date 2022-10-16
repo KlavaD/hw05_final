@@ -1,9 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import PostForm, CommentForm
-from .models import Group, Post, User, Follow
+from .forms import CommentForm, PostForm
+from .models import Comment, Follow, Group, Post, User
 from .utils import posts_paginator
 
 
@@ -95,6 +94,15 @@ def add_comment(request, post_id):
         comment.author = request.user
         comment.post = post
         comment.save()
+    return redirect('posts:post_detail', post_id=post_id)
+
+
+@login_required
+def del_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    post_id = comment.post.id
+    if request.user == comment.author:
+        comment.delete()
     return redirect('posts:post_detail', post_id=post_id)
 
 

@@ -22,12 +22,18 @@
     <div class="media-body card-body">
       <h5 class="mt-0">
         <a href="{% url 'posts:profile' comment.author.username %}">
-          {{ comment.author.username }}
+          {{ comment.author.get_full_name }}
         </a>
       </h5>
       <p>
         {{ comment.text|linebreaks }}
       </p>
+      {% if user.is_authenticated and comment.author == user %}
+      <a class="btn btn-primary" href="{%url 'posts:del_comment' comment.pk %}"> 
+        Удалить комментарий
+      </a>
+      <br>           
+      {% endif %}
     </div>
   </div>
 </div>

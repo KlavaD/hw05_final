@@ -38,9 +38,17 @@
       <p> Комментариев {{ post.comments.count }} </p>
     {% endif %}
     <br>
-    <a class="btn btn-lg btn-primary"
+    {% if not post_detail_flag %}
+      <a class="btn btn-lg btn-primary"
         href="{%url 'posts:post_detail' post.pk %}" role="button">
         подробная информация </a>
+        <br>
+    {% elif user.is_authenticated and post.author == user %}
+      <a class="btn btn-primary" href="{%url 'posts:post_edit' post.pk %}"> 
+        редактировать запись
+      </a>
+      <br>           
+    {% endif %}
     <br>
   </div>
 </div>

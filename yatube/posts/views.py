@@ -46,11 +46,15 @@ def post_detail(request, post_id):
         Post.objects.prefetch_related('comments__author'),
         pk=post_id
     )
+    following = request.user.is_authenticated and post.author.following.filter(
+        user=request.user,
+    ).exists()
     form = CommentForm()
     context = {
         'post': post,
         'form': form,
         'comments': post.comments.all(),
+        'following': following,
     }
     return render(request, 'posts/post_detail.html', context)
 

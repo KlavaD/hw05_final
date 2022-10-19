@@ -1,8 +1,8 @@
 from http import HTTPStatus
 
+from django.core.cache import cache
 from django.test import TestCase, Client
 from django.urls import reverse
-from django.core.cache import cache
 
 from posts.models import Post, Group, User
 

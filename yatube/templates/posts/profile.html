@@ -27,21 +27,21 @@
               </li>
               <li class="list-group-item">
                 {% if user.is_authenticated and user != author %}
-                {% if following %}
+                  {% if following %}
+                    <a
+                      class="btn btn-lg btn-light"
+                      href="{% url 'posts:profile_unfollow' author.username %}" role="button"
+                    >
+                      Отписаться
+                    </a>
+                  {% else %}
                   <a
-                    class="btn btn-lg btn-light"
-                    href="{% url 'posts:profile_unfollow' author.username %}" role="button"
+                    class="btn btn-lg btn-primary"
+                    href="{% url 'posts:profile_follow' author.username %}" role="button"
                   >
-                    Отписаться
+                    Подписаться
                   </a>
-                {% else %}
-                <a
-                  class="btn btn-lg btn-primary"
-                  href="{% url 'posts:profile_follow' author.username %}" role="button"
-                >
-                  Подписаться
-                </a>
-                {% endif %}
+                  {% endif %}
               {% endif %}
               </li>
             </ul>

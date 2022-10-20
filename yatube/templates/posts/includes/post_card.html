@@ -45,7 +45,10 @@
         <br>
     {% elif user.is_authenticated and post.author == user %}
       <a class="btn btn-primary" href="{%url 'posts:post_edit' post.pk %}"> 
-        редактировать запись
+        редактировать пост
+      </a>
+      <a class="btn btn-primary" href="{%url 'posts:post_del' post.pk %}">
+        удалить пост
       </a>
       <br>           
     {% endif %}

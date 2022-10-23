@@ -1,5 +1,9 @@
-from core.models import CreatedModel, User
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.models import ContentType
+
+from core.models import CreatedModel, User
 
 
 class Group(models.Model):
@@ -13,6 +17,16 @@ class Group(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+
+class Like(models.Model):
+    liked_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='liker')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
 
 
 class Post(CreatedModel):
@@ -30,6 +44,7 @@ class Post(CreatedModel):
         upload_to='posts/',
         blank=True
     )
+    likes = GenericRelation(Like, related_query_name='posts')
 
     class Meta(CreatedModel.Meta):
         verbose_name = 'Пост'
@@ -44,9 +59,10 @@ class Comment(CreatedModel):
         null=True,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name="Комментируемы пост",
+        verbose_name="Комментируемый пост",
         help_text='Введите комментарий'
     )
+    likes = GenericRelation(Like, related_query_name='comments')
 
     class Meta(CreatedModel.Meta):
         verbose_name = 'Комментарий'

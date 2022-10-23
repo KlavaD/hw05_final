@@ -29,11 +29,16 @@
         {{ comment.text|linebreaks }}
       </p>
       {% if user.is_authenticated and comment.author == user %}
-      <a class="btn btn-primary" href="{%url 'posts:del_comment' comment.pk %}"> 
-        Удалить комментарий
-      </a>
-      <br>           
+        <a class="btn btn-primary" href="{%url 'posts:del_comment' comment.pk %}">
+          Удалить комментарий
+        </a>
+        <br>
       {% endif %}
+      <span style="float: right">
+      <a  class="bi bi-suit-heart-fill" style="font-size: 2rem; color: red;"
+        href="{%url 'posts:add_like_to_comment' comment.id %}"></a>
+        <span style="color: red;">{{ comment.likes.count }}</span>
+      </span>
     </div>
   </div>
 </div>

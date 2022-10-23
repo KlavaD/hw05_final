@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CommentForm, PostForm
-from .models import Comment, Follow, Group, Post, User
+from .models import Comment, Follow, Group, Post, User, Like
 from .utils import posts_paginator
 
 
@@ -147,3 +148,35 @@ def profile_unfollow(request, username):
     # Дизлайк, отписка
     get_object_or_404(Follow, author__username=username).delete()
     return redirect('posts:profile', username)
+
+
+@login_required
+def like_to_post(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    post_type = ContentType.objects.get_for_model(post)
+    if request.user != post.author:
+        if post.likes.filter(liked_by=request.user,).exists():
+            Like.objects.filter(
+                content_type=post_type, object_id=post.id, liked_by=request.user
+            ).delete()
+        else:
+            Like.objects.create(
+                content_type=post_type, object_id=post.id, liked_by=request.user)
+
+    # return redirect('posts:post_detail', post_id=post_id)
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def like_to_comment(request, comment_id):
+    obj = Comment.objects.get(pk=comment_id)
+    obj_type = ContentType.objects.get_for_model(obj)
+    if request.user != obj.author:
+        if obj.likes.filter(liked_by=request.user, ).exists():
+            Like.objects.filter(
+                content_type=obj_type, object_id=obj.id, liked_by=request.user
+            ).delete()
+        else:
+            Like.objects.create(
+                content_type=obj_type, object_id=obj.id, liked_by=request.user)
+    return redirect('posts:post_detail', post_id=obj.post_id)

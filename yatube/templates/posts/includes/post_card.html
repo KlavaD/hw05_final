@@ -39,6 +39,11 @@
     {% endif %}
     <br>
     {% if not post_detail_flag %}
+       <span style="float: right">
+      <i  class="bi bi-suit-heart-fill" style="font-size: 2rem; color: red;">
+        {{ post.likes.count }}
+      </i>
+      </span>
       <a class="btn btn-lg btn-primary"
         href="{%url 'posts:post_detail' post.pk %}" role="button">
         подробная информация </a>
@@ -50,7 +55,13 @@
       <a class="btn btn-primary" href="{%url 'posts:post_del' post.pk %}">
         удалить пост
       </a>
-      <br>           
+      <br>
+      {%  else %}
+       <span style="float: right">
+        <a  class="bi bi-suit-heart-fill" style="font-size: 2rem; color: red;"
+          href="{%url 'posts:add_like_to_post' post.id %}"></a>
+        <span style="color: red;">{{ post.likes.count }}</span>
+       </span>
     {% endif %}
     <br>
   </div>

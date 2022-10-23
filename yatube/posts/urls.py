@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .models import Comment, Post
 
 app_name = 'posts'
 urlpatterns = [
@@ -9,6 +10,16 @@ urlpatterns = [
     path('profile/<str:username>/', views.profile, name='profile'),
     path(
         'posts/<int:post_id>/comment/', views.add_comment, name='add_comment'
+    ),
+    path(
+        'posts/<int:post_id>/like/',
+        views.like_to_post,
+        name='add_like_to_post'
+    ),
+    path(
+        'posts/comment<int:comment_id>/like/',
+        views.like_to_comment,
+        name='add_like_to_comment'
     ),
     path(
         'posts/comment/<int:comment_id>/',

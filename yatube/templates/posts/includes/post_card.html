@@ -3,30 +3,31 @@
   <div class="card-body">
     <ul>
       <li>
-        Автор: 
+        Автор:
         {% if not profile_flag %}
-          <a href="{%url 'posts:profile' post.author %}">{{ post.author.get_full_name }}</a>
+          <a href="{% url 'posts:profile' post.author %}">
+            {{ post.author.get_full_name }}-{{ post.author.username }}</a>
         {% else %}
-          {{ post.author.get_full_name }}
+          {{ post.author.get_full_name }}-{{ post.author.username }}
         {% endif %}
       </li>
       <li>
         Дата публикации: {{ post.pub_date|date:"d E Y" }}
       </li>
     </ul>
-      {% thumbnail post.image "960x339" crop="center"  upscale=True as im %}
-        <img class="card-img my-2"  src="{{ im.url }}">
-      {% endthumbnail %}    
+    {% thumbnail post.image "960x600" crop="center" upscale=True as im %}
+      <img class="card-img my-2" src="{{ im.url }}">
+    {% endthumbnail %}
     <p class="card-text">
       {{ post.text|linebreaks }}
     </p>
     {% if not group_flag %}
       {% if post.group %}
-        <a href="{%url 'posts:group_list' post.group.slug %}">
+        <a href="{% url 'posts:group_list' post.group.slug %}">
           #{{ post.group }}
         </a>
       {% else %}
-      <span style='color: red'>Этой публикации нет ни в одном сообществе.</span>
+        <span style='color: red'>Этой публикации нет ни в одном сообществе.</span>
       {% endif %}
       <br><br>
     {% endif %}
@@ -39,27 +40,27 @@
     {% endif %}
     <br>
     {% if not post_detail_flag %}
-       <span style="float: right">
-      <i  class="bi bi-suit-heart-fill" style="font-size: 2rem; color: red;">
+      <span style="float: right">
+      <i class="bi bi-suit-heart-fill" style="font-size: 2rem; color: red;">
         {{ post.likes.count }}
       </i>
       </span>
       <a class="btn btn-lg btn-primary"
-        href="{%url 'posts:post_detail' post.pk %}" role="button">
+         href="{% url 'posts:post_detail' post.pk %}" role="button">
         подробная информация </a>
-        <br>
+      <br>
     {% elif user.is_authenticated and post.author == user %}
-      <a class="btn btn-primary" href="{%url 'posts:post_edit' post.pk %}"> 
+      <a class="btn btn-primary" href="{% url 'posts:post_edit' post.pk %}">
         редактировать пост
       </a>
-      <a class="btn btn-primary" href="{%url 'posts:post_del' post.pk %}">
+      <a class="btn btn-primary" href="{% url 'posts:post_del' post.pk %}">
         удалить пост
       </a>
       <br>
-      {%  else %}
-       <span style="float: right">
-        <a  class="bi bi-suit-heart-fill" style="font-size: 2rem; color: red;"
-          href="{%url 'posts:add_like_to_post' post.id %}"></a>
+    {% else %}
+      <span style="float: right">
+        <a class="bi bi-suit-heart-fill" style="font-size: 2rem; color: red;"
+           href="{% url 'posts:add_like_to_post' post.id %}"></a>
         <span style="color: red;">{{ post.likes.count }}</span>
        </span>
     {% endif %}

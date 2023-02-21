@@ -52,6 +52,7 @@ def post_detail(request, post_id):
     ).exists()
     form = CommentForm()
     context = {
+        'author': post.author,
         'post': post,
         'form': form,
         'comments': post.comments.all(),

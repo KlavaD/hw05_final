@@ -4,7 +4,7 @@ from .models import Comment, Follow, Group, Post, Like
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'text', 'pub_date', 'author', 'group','image',)
+    list_display = ('pk', 'text', 'pub_date', 'author', 'group', 'image',)
     list_editable = ('group',)
     search_fields = ('text',)
     list_filter = ('pub_date',)

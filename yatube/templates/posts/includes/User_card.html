@@ -38,11 +38,11 @@
         {% endif %}
       {% endif %}
       {% if user.is_authenticated and user == author %}
-          <a class="btn btn-lg btn-primary"
-             href="{% url 'users:change_user' author.pk %}"
-             role="button">
-            Редактировать
-          </a>
+        <a class="btn btn-lg btn-primary"
+           href="{% url 'users:change_user' author.pk %}"
+           role="button">
+          Редактировать
+        </a>
       {% endif %}
     </li>
   </ul>

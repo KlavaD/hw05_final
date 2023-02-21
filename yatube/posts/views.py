@@ -52,6 +52,7 @@ def post_detail(request, post_id):
     ).exists()
     form = CommentForm()
     context = {
+        'author': post.author,
         'post': post,
         'form': form,
         'comments': post.comments.all(),
@@ -155,13 +156,14 @@ def like_to_post(request, post_id):
     post = Post.objects.get(pk=post_id)
     post_type = ContentType.objects.get_for_model(post)
     if request.user != post.author:
-        if post.likes.filter(liked_by=request.user,).exists():
+        if post.likes.filter(liked_by=request.user, ).exists():
             Like.objects.filter(
                 content_type=post_type, object_id=post.id, liked_by=request.user
             ).delete()
         else:
             Like.objects.create(
-                content_type=post_type, object_id=post.id, liked_by=request.user)
+                content_type=post_type, object_id=post.id,
+                liked_by=request.user)
 
     # return redirect('posts:post_detail', post_id=post_id)
     return redirect(request.META.get('HTTP_REFERER'))

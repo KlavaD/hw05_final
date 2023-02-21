@@ -1,0 +1,49 @@
+{% load thumbnail %}
+<aside class="col-12 col-md-3 mb-2 mt-2 shadow-sm">
+  <ul class="list-group list-group-flush">
+    {% thumbnail author.image "180x240" crop="center" upscale=True as im %}
+      <img class="card-img" src="{{ im.url }}" alt="">
+    {% endthumbnail %}
+    <li class="list-group-item">
+      <h3>Автор:
+        <b>{{ author.get_full_name }}</b>-{{ author.username }}
+      </h3>
+    </li>
+    <li class="list-group-item">
+      Дата рождения: <b> {{ author.birth_date }} </b>
+    </li>
+    <li class="list-group-item">
+      Всего постов: {{ author.posts.count }}
+    </li>
+    <li class="list-group-item">
+      Всего подписок: {{ author.follower.count }}
+    </li>
+    <li class="list-group-item">
+      Всего подписчиков: {{ author.following.count }}
+    </li>
+    <li class="list-group-item">
+      {% if user.is_authenticated and user != author %}
+        {% if following %}
+          <a class="btn btn-lg btn-light"
+             href="{% url 'posts:profile_unfollow' author.username %}"
+             role="button">
+            Отписаться
+          </a>
+        {% else %}
+          <a class="btn btn-lg btn-primary"
+             href="{% url 'posts:profile_follow' author.username %}"
+             role="button">
+            Подписаться
+          </a>
+        {% endif %}
+      {% endif %}
+      {% if user.is_authenticated and user == author %}
+        <a class="btn btn-lg btn-primary"
+           href="{% url 'users:change_user' author.pk %}"
+           role="button">
+          Редактировать
+        </a>
+      {% endif %}
+    </li>
+  </ul>
+</aside>

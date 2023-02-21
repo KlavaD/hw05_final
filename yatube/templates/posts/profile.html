@@ -1,51 +1,18 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
 {% block title %}
   Профайл пользователя {{ author }}
 {% endblock %}
 {% block content %}
   <div class="row">
     <div class="col-15">
-      <div class"container py-5 shadow-sm">
+      <div class="container py-5 shadow-sm">
         <h1>
           Профайл пользователя {{ author.get_full_name }}
           <hr>
         </h1>
         <div class="row col-md-14">
-          <aside class="col-12 col-md-3 mb-2 mt-2 shadow-sm">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <h3>Автор: <b> {{ author.get_full_name }} </b></h3>
-              </li>
-              <li class="list-group-item">
-                Всего постов: {{ author.posts.count }}
-              </li>
-              <li class="list-group-item">
-                Всего подписок: {{ author.follower.count }}
-              </li>
-              <li class="list-group-item">
-                Всего подписчиков: {{ author.following.count }}
-              </li>
-              <li class="list-group-item">
-                {% if user.is_authenticated and user != author %}
-                  {% if following %}
-                    <a
-                      class="btn btn-lg btn-light"
-                      href="{% url 'posts:profile_unfollow' author.username %}" role="button"
-                    >
-                      Отписаться
-                    </a>
-                  {% else %}
-                  <a
-                    class="btn btn-lg btn-primary"
-                    href="{% url 'posts:profile_follow' author.username %}" role="button"
-                  >
-                    Подписаться
-                  </a>
-                  {% endif %}
-              {% endif %}
-              </li>
-            </ul>
-          </aside>
+          {% include 'posts/includes/user_card.html' %}
           <article class="col-12 col-md-9">
             {% for post in page_obj %}
               {% include 'posts/includes/post_card.html' with profile_flag=True %}

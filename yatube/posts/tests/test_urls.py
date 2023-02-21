@@ -151,8 +151,8 @@ class PostURLTests(TestCase):
                         'posts:post_detail', args=(self.post.pk,)
                     ))
                 elif name in (
-                    'posts:profile_follow',
-                    'posts:profile_unfollow'
+                        'posts:profile_follow',
+                        'posts:profile_unfollow'
                 ):
                     self.assertRedirects(response, reverse(
                         'posts:profile', args=(self.post.author.username,)

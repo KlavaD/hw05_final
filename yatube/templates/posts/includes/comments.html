@@ -6,7 +6,7 @@
     <h5 class="card-header">Добавить комментарий:</h5>
     <div class="card-body">
       <form method="post" action="{% url 'posts:add_comment' post.id %}">
-        {% csrf_token %}      
+        {% csrf_token %}
         <div class="form-group mb-3">
           {{ form.text|addclass:"form-control" }}
         </div>
@@ -17,29 +17,30 @@
 {% endif %}
 
 {% for comment in comments %}
-<div class="card mb-3 mt-1 shadow-sm">
-  <div class="media mb-4 ">
-    <div class="media-body card-body">
-      <h5 class="mt-0">
-        <a href="{% url 'posts:profile' comment.author.username %}">
-          {{ comment.author.get_full_name }}
-        </a>
-      </h5>
-      <p>
-        {{ comment.text|linebreaks }}
-      </p>
-      {% if user.is_authenticated and comment.author == user %}
-        <a class="btn btn-primary" href="{%url 'posts:del_comment' comment.pk %}">
-          Удалить комментарий
-        </a>
-        <br>
-      {% endif %}
-      <span style="float: right">
-      <a  class="bi bi-suit-heart-fill" style="font-size: 2rem; color: red;"
-        href="{%url 'posts:add_like_to_comment' comment.id %}"></a>
+  <div class="card mb-3 mt-1 shadow-sm">
+    <div class="media mb-4 ">
+      <div class="media-body card-body">
+        <h5 class="mt-0">
+          <a href="{% url 'posts:profile' comment.author.username %}">
+            {{ comment.author.get_full_name }}
+          </a>
+        </h5>
+        <p>
+          {{ comment.text|linebreaks }}
+        </p>
+        {% if user.is_authenticated and comment.author == user %}
+          <a class="btn btn-primary"
+             href="{% url 'posts:del_comment' comment.pk %}">
+            Удалить комментарий
+          </a>
+          <br>
+        {% endif %}
+        <span style="float: right">
+      <a class="bi bi-suit-heart-fill" style="font-size: 2rem; color: red;"
+         href="{% url 'posts:add_like_to_comment' comment.id %}"></a>
         <span style="color: red;">{{ comment.likes.count }}</span>
       </span>
+      </div>
     </div>
   </div>
-</div>
 {% endfor %}

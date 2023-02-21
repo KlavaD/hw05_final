@@ -1,28 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Зарегистрироваться{% endblock %}
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-8 p-5">
-    <div class="card">
-      <div class="card-header">       
-        Зарегистрироваться           
-      </div>
-      <div class="card-body">        
-        {% include 'includes/errors.html' %}
-        <form method="post"
-          {% if action_url %}
-            action="{% url action_url %}"
-          {% endif %}>
-          {% csrf_token %}
-          {% include 'includes/forms.html' %}
-          <div class="col-md-6 offset-md-4">
-            <button type="submit" class="btn btn-primary">
-              Зарегистрироваться
-            </button>
-          </div>
-        </form>
-      </div> <!-- card body -->
-    </div> <!-- card -->        
+  <div class="row justify-content-center">
+    <div class="col-md-8 p-5">
+      <div class="card">
+        <div class="card-header">
+          Зарегистрироваться
+        </div>
+        <div class="card-body">
+          {% include 'includes/errors.html' %}
+          <form method="post" enctype="multipart/form-data"
+                  {% if action_url %}
+                action="{% url action_url %}"
+                  {% endif %}>
+            {% csrf_token %}
+            {% include 'includes/forms.html' %}
+            <div class="col-md-6 offset-md-4">
+              <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}
+                  Изменить данные
+                {% else %}
+                  Зарегистрироваться
+                {% endif %}
+              </button>
+            </div>
+          </form>
+        </div> <!-- card body -->
+      </div> <!-- card -->
     </div> <!-- col -->
-</div> <!-- row -->
+  </div> <!-- row -->
 {% endblock %} 

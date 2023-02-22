@@ -1,8 +1,8 @@
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
-from django.contrib.auth.views import PasswordResetDoneView, PasswordChangeView
-from django.contrib.auth.views import PasswordResetConfirmView
-from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.auth.views import PasswordChangeDoneView
+from django.contrib.auth.views import PasswordResetCompleteView
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.contrib.auth.views import PasswordResetDoneView, PasswordChangeView
 from django.urls import path
 
 from . import views
@@ -19,6 +19,11 @@ urlpatterns = [
         'signup/',
         views.SignUp.as_view(),
         name='signup'
+    ),
+    path(
+        'signup/<int:user_id>/change',
+        views.change_user_profile,
+        name='change_user'
     ),
     path(
         'login/',

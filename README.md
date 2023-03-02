@@ -1,3 +1,29 @@
-# hw05_final
+# yatube_project
 
-[![CI](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml)
+### Описание:
+## Social network of bloggers. - Социальная сеть блогеров.
+
+### **Возможности**:
+- Публикация личных дневников.
+- Просмотр всех записей автора.
+- Возможность следить за другими авторами.
+- Возможность комментировать записи других авторов.
+- Возможность модерировать записи авторов.
+- Возможность выбора имени.
+
+  
+### **Технологии**:
+- Python 3.7.0
+- Django 2.2.16
+
+ 
+ ### **Инструкции по запуску в dev-режиме**:
+ - запустите виртуальное окружение из директории проекта 
+  ```$ source venv/Scripts/activate ```
+ - разверните сохраненные зависимости проекта
+```$ pip install -r requirements.txt```
+ - запустите сервер в режиме разработки
+  ```$ python manage.py runserver```
+
+### Автор:
+### _Дунаева Клавдия_ 
